@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/tasks";
+const API_URL = "/api/tasks";
 
 let tasks = [];
 
