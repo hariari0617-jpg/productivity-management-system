@@ -1,1 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    const loggedInUser = localStorage.getItem("loggedInUser");
 
+    if (!loggedInUser) {
+        window.location.href = "login.html";
+    }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Productivity Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Productivity Management System</h1>
+
+    <button id="themeToggle" onclick="toggleTheme()">
+        🌙 Dark Mode
+    </button>
+
+    <button id="logoutButton" onclick="logout()">
+        🚪 Logout
+    </button>
+
+    <p>Manage your tasks and stay productive.</p>
+</header>
+
+<main>
+
+    <section class="dashboard">
+
+        <div class="card">
+            <h3>Total Tasks</h3>
+            <p id="totalTasks">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Pending</h3>
+            <p id="pendingTasks">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Completed</h3>
+            <p id="completedTasks">0</p>
+        </div>
+
+          <div class="stat-card">
+            <h3>📈 Progress</h3>
+            <p id="completionPercentage">0%</p>
+
+          <div class="progress-bar">
+            <div id="progressFill"></div>
+        </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="task-section">
+
+        <h2>Add New Task</h2>
+
+        <div class="task-input">
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter your task..."
+            >
+
+            <select id="priorityInput">
+                <option value="Low">Low Priority</option>
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="High">High Priority</option>
+            </select>
+
+            <select id="categoryInput">
+    <option value="">Select Category</option>
+    <option value="Study">📚 Study</option>
+    <option value="Work">💼 Work</option>
+    <option value="Personal">🏠 Personal</option>
+    <option value="Project">💻 Project</option>
+</select>
+
+            <input
+                type="date"
+                id="dueDateInput"
+            >
+
+            <button onclick="addTask()">
+                Add Task
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <section class="task-section">
+
+     <h2>My Tasks</h2>
+
+<div id="deadlineAlert" class="deadline-alert"></div>
+
+<ul id="taskList"></ul>
+
+</section>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
