@@ -17,35 +17,35 @@ const db = new sqlite3.Database("./tasks.db", (err) => {
 });
 
 // Create tasks table
-db.run(`
-    CREATE TABLE IF NOT EXISTS tasks (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        priority TEXT,
-        category TEXT,
-        dueDate TEXT,
-        completed INTEGER DEFAULT 0
-    )
-`);
+db.serialize(() => {
 
-/* USERS TABLE */
-db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    )
-`);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            priority TEXT,
+            category TEXT,
+            dueDate TEXT,
+            completed INTEGER DEFAULT 0
+        )
+    `);
 
-// Add category column to existing database
-db.run(
-    "ALTER TABLE tasks ADD COLUMN category TEXT",
-    (err) => {
-        if (err && !err.message.includes("duplicate column")) {
-            console.log("Category column:", err.message);
-        }
-    }
-);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
+    `);
+
+    // Create demo login user
+    db.run(
+        `INSERT OR IGNORE INTO users (username, password)
+         VALUES (?, ?)`,
+        ["admin", "admin123"]
+    );
+
+});
 
 // Get all tasks
 app.get("/api/tasks", (req, res) => {
