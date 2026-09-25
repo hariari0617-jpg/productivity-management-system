@@ -250,6 +250,58 @@ app.delete("/api/tasks/:id", (req, res) => {
 });
 
 // ===============================
+// REGISTER API
+// ===============================
+
+app.post("/api/register", (req, res) => {
+
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({
+            message: "Username and password are required"
+        });
+    }
+
+    if (username.trim().length < 3) {
+        return res.status(400).json({
+            message: "Username must be at least 3 characters"
+        });
+    }
+
+    if (password.length < 4) {
+        return res.status(400).json({
+            message: "Password must be at least 4 characters"
+        });
+    }
+
+    db.run(
+        `INSERT INTO users (username, password)
+         VALUES (?, ?)`,
+        [username.trim(), password],
+        function (err) {
+
+            if (err) {
+
+                if (err.message.includes("UNIQUE")) {
+                    return res.status(409).json({
+                        message: "Username already exists"
+                    });
+                }
+
+                return res.status(500).json({
+                    message: "Registration failed"
+                });
+            }
+
+            res.json({
+                message: "Registration successful"
+            });
+        }
+    );
+});
+
+// ===============================
 // LOGIN API
 // ===============================
 
