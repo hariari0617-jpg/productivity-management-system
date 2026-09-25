@@ -16,6 +16,42 @@ const db = new sqlite3.Database("./tasks.db", (err) => {
     }
 });
 
+db.serialize(() => {
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            priority TEXT,
+            category TEXT,
+            dueDate TEXT,
+            completed INTEGER DEFAULT 0
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL
+        )
+    `);
+
+    db.run(
+        `INSERT OR IGNORE INTO users (username, password)
+         VALUES (?, ?)`,
+        ["admin", "admin123"],
+        function (err) {
+            if (err) {
+                console.log("User creation error:", err.message);
+            } else {
+                console.log("Admin user ready. Changes:", this.changes);
+            }
+        }
+    );
+
+});
+
 // Create tasks table
 db.serialize(() => {
 
